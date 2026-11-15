@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fc">
+  <title>ICON PUBLIC SCHOOL | Fee Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <img class="school-logo login-logo" src="icon-public-school-logo.png" alt="ICON Public School logo">
+      <p class="eyebrow">ICON PUBLIC SCHOOL · FEE MANAGEMENT</p>
+      <p class="school-tagline">A Journey to inspire kids.</p>
+      <h1>Welcome back</h1>
+      <p class="muted">Sign in to manage school and bus fees.</p>
+      <form id="loginForm">
+        <label>Admin username<input id="loginUser" autocomplete="username" value="admin" required></label>
+        <label>Password<input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password" required></label>
+        <button class="btn primary full" type="submit">Sign in</button>
+        <p id="loginError" class="error"></p>
+      </form>
+      <p class="hint">First login: <b>admin</b> / <b>admin123</b>. Change it from Settings after login.</p>
+    </div>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><img class="school-logo sidebar-logo" src="icon-public-school-logo.png" alt="ICON Public School logo"><div><b>ICON PUBLIC SCHOOL</b><small>Fee Management</small></div></div>
+      <div class="nav-label">WORKSPACE</div>
+      <button class="nav-item active" data-page="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-item" data-page="students">♙ <span>Students</span></button>
+      <button class="nav-item" data-page="school">▤ <span>School Fees</span></button>
+      <button class="nav-item" data-page="bus">▣ <span>Bus Management</span></button>
+      <button class="nav-item" data-page="payments">₹ <span>Payments & Receipts</span></button>
+      <button class="nav-item" data-page="reports">▧ <span>Reports</span></button>
+      <div class="nav-label">SYSTEM</div>
+      <button class="nav-item" data-page="backup">⇧ <span>Backup & Import</span></button>
+      <button class="nav-item" data-page="settings">⚙ <span>Settings</span></button>
+      <div class="sidebar-bottom"><div class="online-dot"></div><span>Local database active</span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><p class="eyebrow" id="crumb">OVERVIEW</p><h2 id="pageTitle">Dashboard</h2></div>
+        <div class="top-actions"><span class="date-chip" id="todayLabel"></span><button class="avatar" id="userMenu" title="Admin account">A</button></div>
+      </header>
+      <section id="pageContent" class="content"></section>
+      <footer><strong>ICON PUBLIC SCHOOL</strong> · A Journey to inspire kids. · Fee Management</footer>
+    </main>
+  </div>
+
+  <dialog id="studentDialog" class="modal">
+    <form id="studentForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">STUDENT RECORD</p><h3 id="studentModalTitle">Add student</h3></div><button type="button" class="icon-btn" data-close="studentDialog">✕</button></div>
+      <input type="hidden" id="studentId">
+      <div class="form-grid">
+        <label>Admission / Roll No *<input id="sAdmission" required maxlength="60"></label>
+        <label>Full name *<input id="sName" required maxlength="120"></label>
+        <label>Class<input id="sCourse" maxlength="80" placeholder="e.g. Class 8"></label>
+        <label>Section<input id="sDept" maxlength="80"></label>
+        <label>Academic session<input id="sSession" placeholder="2026-27"></label>
+        <label>Phone<input id="sPhone" inputmode="tel" maxlength="20"></label>
+        <label class="check-label"><input id="sBusOpted" type="checkbox"> Uses school bus</label>
+        <label>Bus route<input id="sRoute" maxlength="80"></label>
+        <label>Bus stop<input id="sStop" maxlength="80"></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="studentDialog">Cancel</button><button class="btn primary" type="submit">Save student</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="paymentDialog" class="modal">
+    <form id="paymentForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">FEE COLLECTION</p><h3>Record payment</h3></div><button type="button" class="icon-btn" data-close="paymentDialog">✕</button></div>
+      <div class="form-grid">
+        <label>Student *<select id="pStudent" required></select></label>
+        <label>Fee head *<select id="pType"><option>School Fee</option><option>Bus Fee</option><option>Admission Fee</option><option>Tuition Fee</option><option>Examination Fee</option><option>Library Fee</option><option>Development Fee</option><option>Other</option></select></label>
+        <label>Fee period<input id="pPeriod" placeholder="e.g. April 2026 / Semester 1"></label>
+        <label>Amount received (₹) *<input id="pAmount" type="number" min="0.01" step="0.01" required></label>
+        <label>Payment date<input id="pDate" type="date" required></label>
+        <label>Payment mode<select id="pMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank Transfer</option><option>Cheque</option></select></label>
+        <label class="span-2">Remarks<input id="pRemarks" maxlength="250"></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="paymentDialog">Cancel</button><button class="btn primary" type="submit">Save & create receipt</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="planDialog" class="modal">
+    <form id="planForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">FEE STRUCTURE</p><h3>Add fee obligation</h3></div><button type="button" class="icon-btn" data-close="planDialog">✕</button></div>
+      <div class="form-grid">
+        <label>Student *<select id="fStudent" required></select></label>
+        <div class="fee-head-field"><span class="field-label">Fee head *</span><div id="fTypeOptions" class="fee-head-options">
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="School Fee"> <span>School Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Bus Fee"> <span>Bus Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Admission Fee"> <span>Admission Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Tuition Fee"> <span>Tuition Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Examination Fee"> <span>Examination Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Library Fee"> <span>Library Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Development Fee"> <span>Development Fee</span></label>
+          <label class="fee-option"><input type="checkbox" name="feeHead" value="Other"> <span>Other</span></label>
+        </div><small class="fee-head-help">Select one or more fee heads. The entered amount will be applied separately to each selected fee head.</small></div>
+        <label>Period / installment *<input id="fPeriod" required placeholder="e.g. April 2026"></label>
+        <label>Due date *<input id="fDueDate" type="date" required></label>
+        <label>Amount due (₹) *<input id="fAmount" type="number" min="0.01" step="0.01" required></label>
+        <label>Discount / concession (₹)<input id="fDiscount" type="number" min="0" step="0.01" value="0"></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="planDialog">Cancel</button><button class="btn primary" type="submit">Save fee obligation</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="busDialog" class="modal">
+    <form id="busForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">TRANSPORT</p><h3>Add bus / route</h3></div><button type="button" class="icon-btn" data-close="busDialog">✕</button></div>
+      <div class="form-grid">
+        <label>Bus number *<input id="bNumber" required></label><label>Route name *<input id="bRoute" required></label>
+        <label>Driver name<input id="bDriver"></label><label>Driver phone<input id="bPhone"></label>
+        <label>Stops (comma separated)<input id="bStops" placeholder="Main Gate, Market, School"></label>
+        <label>Monthly fee (₹)<input id="bFee" type="number" min="0" step="0.01" value="0"></label>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn ghost" data-close="busDialog">Cancel</button><button class="btn primary" type="submit">Save route</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
